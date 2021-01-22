@@ -1,4 +1,4 @@
-package swagger.configuration;
+package swagger.controllers;
 
 import com.upgrad.quora.api.model.SigninResponse;
 import com.upgrad.quora.api.model.SignoutResponse;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Base64;
 
 @RestController
-public class AdminController {
+public class CommonController {
     @Autowired
     private UserBusinessService userBusinessService;
 
@@ -28,7 +28,7 @@ public class AdminController {
     private AuthenticationService authenticationService;
 
     //for signup endpoint
-    @RequestMapping(method = RequestMethod.DELETE, path = "/admin/user/{userId}")
+    @RequestMapping(method = RequestMethod.GET, path = "/userprofile/{userId}")
     public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") String userId) throws UserNotFoundException {
         UsersEntity userEntity = new UsersEntity();
         userEntity = userBusinessService.getUser(userId);
@@ -48,4 +48,37 @@ public class AdminController {
         return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
     }
 
+    //for signin endpoint
+    @RequestMapping(method = RequestMethod.POST, path = "user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SigninResponse> Signin(@RequestHeader("Authorization") final String authorization) throws AuthenticationFailedException {
+        byte[] decoder = Base64.getDecoder().decode(authorization.split("Basic")[1]);
+        String decorderText = new String(decoder);
+        String decodedArray[] = decorderText.split(":");
+
+        UserAuthEntity userAuthEntity = new UserAuthEntity();
+        UserAuthEntity userAuthToken = authenticationService.authenticate(decodedArray[0], decodedArray[1]);
+        UsersEntity user = userAuthToken.getUser();
+
+        SigninResponse authorizedUserResponse = new SigninResponse().id(user.getUuid())
+                .message("SIGNED IN SUCCESSFULLY");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("access_token", userAuthToken.getAccessToken());
+        return new ResponseEntity<SigninResponse>(authorizedUserResponse, headers, HttpStatus.OK);
+
+
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout")
+    public ResponseEntity<SignoutResponse> Signout(@RequestHeader("Authorization") final String Authorization) throws SignOutRestrictedException {
+        UserAuthEntity userAuthToken = authenticationService.authenticateAndLogout(Authorization); // todo: see if user has
+        // already signed out.
+        UsersEntity user = userAuthToken.getUser();
+        SignoutResponse authorizedUserResponse = new SignoutResponse().id(user.getUuid())
+                .message("SIGNED OUT SUCCESSFULLY");
+
+        return new ResponseEntity<SignoutResponse>(authorizedUserResponse, HttpStatus.OK);
+
+
+    }
 }
