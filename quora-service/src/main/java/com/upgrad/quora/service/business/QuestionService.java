@@ -5,8 +5,10 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,35 @@ private UserDao userDao;
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
         }
     }
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity deleteQuestion(String Token,String questionUuid) throws AuthorizationFailedException, InvalidQuestionException {
+
+        UserAuthEntity userAuthEntity=userDao.getUserAuthToken(Token);
+
+        if (userAuthEntity!=null){ throw new AuthorizationFailedException("ATHR-001","User has not signed In"); }
+
+//If the UserAuthEntity is logged out and also we check the Authentication Parameters of the Particular user Entity
+        if (userAuthEntity.getLogoutAt()!=null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLogoutAt())){ throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to delete a question"); }
+
+
+        QuestionEntity questionEntity=questionDao.getQuestionById(questionUuid);
+        if (questionEntity==null){
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+
+        if (!(userAuthEntity.getUser().getUuid().equals(userAuthEntity.getUser().getUuid()))){
+            throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
+        }
+
+          return questionDao.deleteQuestion(questionEntity);
+
+    }
+
+
+
 
 
 }

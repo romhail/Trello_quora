@@ -1,5 +1,6 @@
 package swagger.controllers;
 
+import com.upgrad.quora.api.model.QuestionDeleteResponse;
 import com.upgrad.quora.api.model.QuestionDetailsResponse;
 import com.upgrad.quora.api.model.QuestionRequest;
 import com.upgrad.quora.api.model.QuestionResponse;
@@ -9,6 +10,7 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,16 +63,17 @@ public class QuestionController {
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //for getAllQuestions endpoint.
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") String Authorization, @PathVariable("UserId") String UserUuid) throws AuthorizationFailedException, UserNotFoundException {
 
         List<QuestionEntity> listOfQuestions = questionService.getAllQuestionsByUser(Authorization, userBusinessService.getUser(Authorization).getId());
-        List<QuestionDetailsResponse> questionDetailsResponse = getCustomizedQuestionResponse(listOfQuestions);
+        List<QuestionDetailsResponse> questionDetailsResponse = getResponse(listOfQuestions);
 
         return new ResponseEntity<>(questionDetailsResponse, HttpStatus.OK);
     }
 
-    private List<QuestionDetailsResponse> getCustomizedQuestionResponse(List<QuestionEntity> listOfQuestions) {
+    private List<QuestionDetailsResponse> getResponse(List<QuestionEntity> listOfQuestions) {
         List<QuestionDetailsResponse> questionDetailsResponse = new ArrayList<QuestionDetailsResponse>();
         for (QuestionEntity each : listOfQuestions) {
             questionDetailsResponse.add(new QuestionDetailsResponse().id(each.getUuid()).content(each.getContent()));
@@ -78,8 +81,17 @@ public class QuestionController {
         return questionDetailsResponse;
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(method = RequestMethod.DELETE, path = "/delete/{questionId}")
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion(
+            @RequestHeader("authorization") final String accessToken,
+            @PathVariable("questionId") final String questionId)
+            throws AuthorizationFailedException, InvalidQuestionException {
 
-
-
-
+        QuestionEntity questionEntity = questionService.deleteQuestion(questionId, accessToken);
+        QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse();
+        questionDeleteResponse.setId(questionEntity.getUuid());
+        questionDeleteResponse.setStatus("QUESTION DELETED");
+        return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
+    }
 }
