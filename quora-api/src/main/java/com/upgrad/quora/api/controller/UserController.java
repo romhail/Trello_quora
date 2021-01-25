@@ -1,4 +1,4 @@
-package swagger.controllers;
+package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.SigninResponse;
 import com.upgrad.quora.api.model.SignoutResponse;
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     //for signin endpoint
-    @RequestMapping(method = RequestMethod.POST, path = "user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+   /* @RequestMapping(method = RequestMethod.POST, path = "user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> Signin(@RequestHeader("Authorization") final String authorization) throws AuthenticationFailedException {
         byte[] decoder = Base64.getDecoder().decode(authorization.split("Basic")[1]);
         String decorderText = new String(decoder);
@@ -83,5 +83,5 @@ public class UserController {
         return new ResponseEntity<SignoutResponse>(authorizedUserResponse, HttpStatus.OK);
 
 
-    }
+    }*/
 }

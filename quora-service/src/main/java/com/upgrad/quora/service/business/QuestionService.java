@@ -20,9 +20,8 @@ public class QuestionService {
 
     @Autowired
     private QuestionDao questionDao;
-@Autowired
-private UserDao userDao;
-
+    @Autowired
+    private UserDao userDao;
 
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -42,6 +41,7 @@ private UserDao userDao;
         }
         return listOfQuestions;
     }
+
     private void validateAuthFailure(UserAuthEntity userAuthTokenEntity) throws AuthorizationFailedException {
         if (userAuthTokenEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
@@ -53,28 +53,32 @@ private UserDao userDao;
     }
 
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
     @Transactional(propagation = Propagation.REQUIRED)
-    public QuestionEntity deleteQuestion(String Token,String questionUuid) throws AuthorizationFailedException, InvalidQuestionException {
+    public QuestionEntity deleteQuestion(String Token, String questionUuid) throws AuthorizationFailedException, InvalidQuestionException {
 
-        UserAuthEntity userAuthEntity=userDao.getUserAuthToken(Token);
+        UserAuthEntity userAuthEntity = userDao.getUserAuthToken(Token);
 
-        if (userAuthEntity!=null){ throw new AuthorizationFailedException("ATHR-001","User has not signed In"); }
+        if (userAuthEntity != null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed In");
+        }
 
 //If the UserAuthEntity is logged out and also we check the Authentication Parameters of the Particular user Entity
-        if (userAuthEntity.getLogoutAt()!=null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLogoutAt())){ throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to delete a question"); }
+        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLogoutAt())) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete a question");
+        }
 
 
-        QuestionEntity questionEntity=questionDao.getQuestionById(questionUuid);
-        if (questionEntity==null){
+        QuestionEntity questionEntity = questionDao.getQuestionById(questionUuid);
+        if (questionEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         }
 
-        if (!(userAuthEntity.getUser().getUuid().equals(userAuthEntity.getUser().getUuid()))){
+        if (!(userAuthEntity.getUser().getUuid().equals(userAuthEntity.getUser().getUuid()))) {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
         }
 
-          return questionDao.deleteQuestion(questionEntity);
+        return questionDao.deleteQuestion(questionEntity);
 
     }
 

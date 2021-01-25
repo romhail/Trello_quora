@@ -1,4 +1,4 @@
-package swagger.controllers;
+package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.*;
 
@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/question")
 public class QuestionController {
 
     @Autowired

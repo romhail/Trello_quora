@@ -1,4 +1,4 @@
-package swagger.controllers;
+package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.service.business.AuthenticationService;
 import com.upgrad.quora.service.business.UserBusinessService;

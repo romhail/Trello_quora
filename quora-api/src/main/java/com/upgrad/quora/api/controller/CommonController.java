@@ -1,4 +1,4 @@
-package swagger.controllers;
+package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.SigninResponse;
 import com.upgrad.quora.api.model.SignoutResponse;

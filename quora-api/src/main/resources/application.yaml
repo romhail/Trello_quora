@@ -6,7 +6,7 @@ server:
 spring:
 
   application:
-    name:
+    name: qa
 
   datasource:
     driverClassName: org.postgresql.Driver
