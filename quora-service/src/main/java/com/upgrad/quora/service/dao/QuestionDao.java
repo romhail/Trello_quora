@@ -18,7 +18,7 @@ public class QuestionDao {
         return questionEntity;
     }
 
-    public QuestionEntity getQuestionByQUuid(final String uuid) {
+    public QuestionEntity getQuestionByUuid(final String uuid) {
         try {
             return entityManager.createNamedQuery("getQuestionById", QuestionEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
@@ -28,7 +28,7 @@ public class QuestionDao {
 
     public List <QuestionEntity> getAllQuestionsByUser(final String uuid) {
         try {
-            return entityManager.createNamedQuery("allQuestionsByUserId", QuestionEntity.class).setParameter("uuid", uuid).getResultList();
+            return entityManager.createNamedQuery("questionsByUser", QuestionEntity.class).setParameter("uuid", uuid).getResultList();
         } catch (NoResultException nre) {
             return null;
         }
@@ -45,7 +45,7 @@ public class QuestionDao {
 
 
     public void deleteQuestion(final String uuid) {
-        QuestionEntity questionEntity = getQuestionByQUuid(uuid);
+        QuestionEntity questionEntity = getQuestionByUuid(uuid);
         entityManager.remove(questionEntity);
     }
 
@@ -66,7 +66,7 @@ public class QuestionDao {
 	 * @param userid
 	 * @return List<Question>
 	 */
-	public List<QuestionEntity> getQuestionsByUser(String userid) {
+	public List<QuestionEntity> getQuestionsByUser(Integer userid) {
 		try {
 			return entityManager.createNamedQuery("questionsByUser", QuestionEntity.class).setParameter("qid", userid)
 					.getResultList();
@@ -104,15 +104,6 @@ public class QuestionDao {
 		return questionEntity;
 	}
 
-    public QuestionEntity editQuestionContent(QuestionEntity questionEntity) {
-		return entityManager.merge(questionEntity);
-    }
 
-	public QuestionEntity getQuestionByUuid(String uuid) {
-		try {
-			return entityManager.createNamedQuery("questionEntityByUuid",QuestionEntity.class).setParameter("uuid",uuid).getSingleResult();
-		} catch (NoResultException nre);
-		return null;
-	}
 }
 
