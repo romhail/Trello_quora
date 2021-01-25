@@ -66,7 +66,7 @@ public class QuestionDao {
 	 * @param userid
 	 * @return List<Question>
 	 */
-	public List<QuestionEntity> getQuestionsByUser(String userid) {
+	public List<QuestionEntity> getQuestionsByUser(Integer userid) {
 		try {
 			return entityManager.createNamedQuery("questionsByUser", QuestionEntity.class).setParameter("qid", userid)
 					.getResultList();
@@ -107,13 +107,6 @@ public class QuestionDao {
     public QuestionEntity editQuestionContent(QuestionEntity questionEntity) {
 		return entityManager.merge(questionEntity);
     }
-
-	public QuestionEntity getQuestionByUuid(String uuid) {
-		try {
-			return entityManager.createNamedQuery("questionEntityByUuid",QuestionEntity.class).setParameter("uuid",uuid).getSingleResult();
-		} catch (NoResultException nre);
-		return null;
-	}
 
 }
 

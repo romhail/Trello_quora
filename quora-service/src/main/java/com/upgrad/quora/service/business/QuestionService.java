@@ -32,7 +32,7 @@ private UserDao userDao;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<QuestionEntity> getAllQuestionsByUser(String Authorization, String userid)
+    public List<QuestionEntity> getAllQuestionsByUser(String Authorization, Integer userid)
             throws UserNotFoundException, AuthorizationFailedException {
         UserAuthEntity userAuthTokenEntity = userDao.getUserAuthToken(Authorization);
         validateAuthFailure(userAuthTokenEntity);

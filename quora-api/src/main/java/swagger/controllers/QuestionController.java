@@ -161,7 +161,7 @@ public class QuestionController {
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET, path ="/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@PathVariable("userId") final String userId, @RequestHeader("authorization") final Integer authorization) throws AuthorizationFailedException, UserNotFoundException {
 
         // Get all questions for requested user
         List<QuestionEntity> allQuestions = questionService.getAllQuestionsByUser(userId, authorization);

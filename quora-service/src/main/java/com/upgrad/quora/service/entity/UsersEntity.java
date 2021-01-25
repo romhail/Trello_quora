@@ -88,7 +88,7 @@ public class UsersEntity implements Serializable {
     @Size(max = 30)
     private String contactnumber;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
