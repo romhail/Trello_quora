@@ -18,8 +18,10 @@ import java.time.ZonedDateTime;
 @NamedQueries(
         {
                 @NamedQuery(name = "answerEntityByUuid", query = "select ae from AnswerEntity ae where ae.uuid = :uuid"),
+                @NamedQuery(name = "answerEntityById", query = "select ae from AnswerEntity ae where ae.id = :ID"),
                 @NamedQuery(name = "answersByQuestionId", query = "select ae from AnswerEntity ae inner join ae" +
                         ".question qn where qn.uuid = :uuid"),
+
         }
 )
 public class AnswerEntity implements Serializable {
@@ -57,7 +59,8 @@ public class AnswerEntity implements Serializable {
     @NotNull
     @Size(max = 30)
     private String role;
-    
+    private String answer;
+
     public String getRole() {
         return role;
     }
@@ -129,4 +132,11 @@ public class AnswerEntity implements Serializable {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
+    public void setAnswer(String answer) {
+        this.answer=answer;
+    }
+
+    public String getAnswer() {
+     return answer;
+    }
 }
