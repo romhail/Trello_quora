@@ -13,12 +13,18 @@ public class UserDao {
     @Autowired
     private EntityManager entityManager;
 
-    public UsersEntity createUsers(UsersEntity userEntity){
+    /*
+     *Method CreateUsers takes userEntity Object and Persist the details into the database using entityManager.
+     */
+    public UsersEntity createUsers(UsersEntity userEntity) {
         entityManager.persist((userEntity));
         return userEntity;
     }
 
-    public UsersEntity getUserByEmail(final String email){
+    /*
+    Method getUserByEmail , it takes email as object and it sends query to the database to fetch Email from UsersEntity.class
+     */
+    public UsersEntity getUserByEmail(final String email) {
         try {
             return entityManager.createNamedQuery("userByEmail", UsersEntity.class).setParameter("email", email)
                     .getSingleResult();
@@ -26,11 +32,12 @@ public class UserDao {
             return null;
         }
     }
+
     public void updateUserEntity(UserAuthEntity userEntity) {
         entityManager.merge(userEntity);
     }
 
-    public UsersEntity getUserByUserName(final String userName){
+    public UsersEntity getUserByUserName(final String userName) {
         try {
             return entityManager.createNamedQuery("userByUserName", UsersEntity.class).setParameter("username", userName)
                     .getSingleResult();
@@ -38,7 +45,8 @@ public class UserDao {
             return null;
         }
     }
-    public UserAuthEntity createAuthToken(final UserAuthEntity userAuthTokenEntity){
+
+    public UserAuthEntity createAuthToken(final UserAuthEntity userAuthTokenEntity) {
         entityManager.persist(userAuthTokenEntity);
         return userAuthTokenEntity;
     }

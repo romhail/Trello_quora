@@ -6,5 +6,5 @@ This is group project assignment repository from Upgrad
 Group Members -
 
   1. Romil
-  2. Mohmmad sajid
+  2. Mohd Sajjad Anver
   3. Anushrita 

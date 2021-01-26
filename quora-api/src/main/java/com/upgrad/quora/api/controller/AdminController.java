@@ -18,7 +18,14 @@ public class AdminController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    //for signup endpoint
+    /**
+     * Method to delete a particular user-->getUser
+     * Request Method is of DELETE Type
+     * Exception : UserNotFoundException
+     *
+     * @return Response Entity <UserDetailsResponse>
+     * Status: HttpStatus.OK
+     */
     @RequestMapping(method = RequestMethod.DELETE, path = "/admin/user/{userId}")
     public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") String userId) throws UserNotFoundException {
         UsersEntity userEntity = new UsersEntity();

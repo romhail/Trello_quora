@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Base64;
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -31,11 +32,17 @@ public class UserController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    //for signup endpoint
+    /*
+    *  This Method is used to hit the signUp Endpoint
+     * RequestMethod:POST
+     * Exception: SignUpRestrictedException
+     * path = "/user/signup"
+     * Status : User Successfully Registered
+     */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
         UsersEntity userEntity = new UsersEntity();
-//        userEntity.setUuid(UUID.randomUUID().toString());
+        userEntity.setUuid(UUID.randomUUID().toString());
         signupUserRequest.setAboutMe(userEntity.getAboutme());
         userEntity.setContactnumber(signupUserRequest.getContactNumber());
         userEntity.setCountry(signupUserRequest.getCountry());

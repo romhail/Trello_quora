@@ -29,10 +29,8 @@ public class QuestionController {
      * This api endpoint is used to post a new question
      *
      * @param QuestionRequest   question details for adding new question in QuestionRequest model
-     *        authorization string authorisation token
-     *
+     * authorization string authorisation token
      * @return JSON response with user uuid and message
-     *
      * @throws AuthorizationFailedException if validation for user details conflicts
      */
 
@@ -55,7 +53,7 @@ public class QuestionController {
         if (userAuthTokenEntity.getLogoutAt() != null) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
         }
-      // create question entity
+        // create question entity
         final QuestionEntity question = new QuestionEntity();
         question.setContent(questionRequest.getContent());
         question.setDate(ZonedDateTime.now());
@@ -74,10 +72,8 @@ public class QuestionController {
      * This api endpoint is used to edit question
      *
      * @param questionEditRequest question details for editing exiting question
-     * authorization string authorisation token
-     *
+     *                            authorization string authorisation token
      * @return JSON response with user uuid and message
-     *
      * @throws AuthorizationFailedException if validation for user details conflicts
      */
     @RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -95,14 +91,12 @@ public class QuestionController {
     }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //for getAllQuestions endpoint.
+
     /**
      * This api endpoint is used to show all posted questions
      *
-     * @param  Authorization string authorisation token
-     *
-     *
+     * @param Authorization string authorisation token
      * @return JSON response with user uuid and message
-     *
      * @throws AuthorizationFailedException if validation for user details conflicts
      */
 
@@ -128,16 +122,15 @@ public class QuestionController {
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     /**
      * This api endpoint is used to Delete  question
      *
      * @param questionId string questionId details for deleting exiting question
-     *        authorization string authererisation token
-     *
+     *                   authorization string authererisation token
      * @return JSON response with user uuid and message
-     *
      * @throws AuthorizationFailedException if validation for user details conflicts
-     * @throws    InvalidQuestionException if question doesn`t exist
+     * @throws InvalidQuestionException     if question doesn`t exist
      */
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/delete/{questionId}")
@@ -158,7 +151,7 @@ public class QuestionController {
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    @RequestMapping(method = RequestMethod.GET, path ="/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@PathVariable("userId") final String userId, @RequestHeader("authorization") final Integer authorization) throws AuthorizationFailedException, UserNotFoundException {
 
         // Get all questions for requested user
@@ -166,7 +159,7 @@ public class QuestionController {
 
         // Create response
         List<QuestionDetailsResponse> allQuestionDetailsResponse = new ArrayList<QuestionDetailsResponse>();
-
+       //It is used to iterate through the set of Questions that are input by the user.
         for (int i = 0; i < allQuestions.size(); i++) {
             QuestionDetailsResponse questionDetailsResponse = new QuestionDetailsResponse()
                     .content(allQuestions.get(i).getContent())

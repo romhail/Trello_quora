@@ -27,7 +27,15 @@ public class CommonController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    //for signup endpoint
+
+    /*
+     *This Method is used to get the user
+     *RequestMethod: GET
+     *Exception: UserNotFoundException
+     *Status :HttpStatus.OK
+     *Path:"/userprofile/{userId}"
+     *
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/userprofile/{userId}")
     public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") String userId) throws UserNotFoundException {
         UsersEntity userEntity = new UsersEntity();
@@ -48,7 +56,18 @@ public class CommonController {
         return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
     }
 
-    //for signin endpoint
+
+
+
+    /*
+     *This Method is used to hit  the Signin Endpoint
+     *RequestMethod: POST
+     *Exception: AuthenticationFailedException
+     *Status :HttpStatus.OK
+     *Path:"user/signin"
+     *Password Authentication has been Implemented Using SALT.
+     */
+
     @RequestMapping(method = RequestMethod.POST, path = "user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> Signin(@RequestHeader("Authorization") final String authorization) throws AuthenticationFailedException {
         byte[] decoder = Base64.getDecoder().decode(authorization.split("Basic")[1]);
@@ -68,6 +87,22 @@ public class CommonController {
 
 
     }
+
+
+
+
+
+
+
+    /*
+     *This Method is used to hit  the Signout Endpoint
+     *RequestMethod: POST
+     *Exception: SignOutRestrictedException
+     *Status :HttpStatus.OK
+     *Path:"user/signout"
+     *Method Signout This method calls the business logic in Quora-service.
+     */
+
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signout")
     public ResponseEntity<SignoutResponse> Signout(@RequestHeader("Authorization") final String Authorization) throws SignOutRestrictedException {

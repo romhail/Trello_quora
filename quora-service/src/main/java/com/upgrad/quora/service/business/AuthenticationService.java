@@ -22,15 +22,25 @@ public class AuthenticationService {
     @Autowired
     private PasswordCryptographyProvider cryptographyProvider;
 
+
+    /*
+     *@Transactional(propagation = Propagation.REQUIRED)
+     * Method authenticate Checks if a user is present is database or not.
+     * Exception : AuthenticationFailedException.
+     * Throws :("ATH-001", "This username does not exist").
+     * It depends on userDao to persist the details from the database.
+     */
+
+
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
         UsersEntity userEntity = userDao.getUserByUserName(username);
-        if(userEntity == null){
+        if (userEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
 
         final String encryptedPassword = cryptographyProvider.encrypt(password, userEntity.getSalt());
-        if(encryptedPassword.equals(userEntity.getPassword())){
+        if (encryptedPassword.equals(userEntity.getPassword())) {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthToken = new UserAuthEntity();
             userAuthToken.setUser(userEntity);
@@ -44,22 +54,25 @@ public class AuthenticationService {
             userDao.createAuthToken(userAuthToken);
 
             return userAuthToken;
-        }
-        else{
+        } else {
             throw new AuthenticationFailedException("ATH-002", "Password Failed");
         }
 
     }
 
-    //todo: change name as authenticate and logout
+    /*
+     *todo: change name as authenticate and logout
+     *Exception: SignOutRestrictedException
+     * Throws:"SGR-001","User is not Signed in"
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity authenticateAndLogout(String token) throws SignOutRestrictedException {
         UserAuthEntity userEntity = userDao.getUserAuthToken(token);
-        if(userEntity == null){
-            throw new SignOutRestrictedException("SGR-001","User is not Signed in");
+        if (userEntity == null) {
+            throw new SignOutRestrictedException("SGR-001", "User is not Signed in");
         }
         userEntity.setLogoutAt(ZonedDateTime.now());
         userDao.updateUserEntity(userEntity);
-        return  userEntity;
+        return userEntity;
     }
 }
